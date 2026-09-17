@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  background: #F5F3ED;
+  color: #0A0A08;
+  font-family: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: #0A0A08;
+  color: #F5F3ED;
+}
+
+a, button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+/* ---- Hero secondary word rotator ---- */
+.word-enter {
+  animation: wordIn 700ms cubic-bezier(.16,.8,.24,1) forwards;
+}
+.word-exit {
+  animation: wordOut 500ms cubic-bezier(.4,0,.2,1) forwards;
+}
+@keyframes wordIn {
+  from {
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(0.3em);
+    opacity: 0;
+  }
+  to {
+    clip-path: inset(0 0 0% 0);
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes wordOut {
+  from {
+    clip-path: inset(0 0 0% 0);
+    opacity: 1;
+  }
+  to {
+    clip-path: inset(0% 0 0 0);
+    opacity: 0;
+  }
+}
+
+/* ---- Scroll reveal ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 900ms cubic-bezier(.16,.8,.24,1), transform 900ms cubic-bezier(.16,.8,.24,1);
+  will-change: transform, opacity;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---- Placeholder texture ---- */
+.placeholder-texture {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(10,10,8,0.08),
+    rgba(10,10,8,0.08) 1px,
+    transparent 1px,
+    transparent 10px
+  );
+}
+
+/* Hide scrollbar for horizontal strips while keeping scrollability */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
