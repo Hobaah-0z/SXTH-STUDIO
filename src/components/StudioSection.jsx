@@ -1,4 +1,5 @@
 import { useReveal } from '../hooks/useReveal'
+import RevealLines from './motion/RevealLines'
 
 export default function StudioSection() {
   const [ref, visible] = useReveal()
@@ -6,15 +7,14 @@ export default function StudioSection() {
   return (
     <section id="studio" className="border-b border-line bg-paper px-6 py-24 md:px-10 md:py-32">
       <div ref={ref} className={`reveal mx-auto max-w-[1600px] ${visible ? 'is-visible' : ''}`}>
-        <span className="mb-8 block text-[12px] uppercase tracking-widest2 text-muted">
+        <span className="mb-8 block text-[12px] uppercase tracking-widest2 text-accent">
           The Studio
         </span>
 
-        <h2 className="max-w-4xl text-[9vw] font-medium leading-[0.98] tracking-tightest sm:text-[6vw] md:text-[4.4vw]">
-          WE MAKE THINGS
-          <br />
-          WORTH LOOKING AT.
-        </h2>
+        <RevealLines
+          lines={['WE MAKE THINGS', 'WORTH LOOKING AT.']}
+          className="max-w-4xl text-[9vw] font-medium leading-[0.98] tracking-tightest sm:text-[6vw] md:text-[4.4vw]"
+        />
 
         <div className="mt-10 flex flex-col gap-8 md:mt-14 md:flex-row md:items-end md:justify-between">
           <p className="max-w-md text-[16px] leading-relaxed text-muted md:text-[18px]">

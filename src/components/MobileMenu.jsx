@@ -1,4 +1,6 @@
 import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import Logo from './Logo'
 
 export default function MobileMenu({ open, onClose, links }) {
   useEffect(() => {
@@ -22,7 +24,7 @@ export default function MobileMenu({ open, onClose, links }) {
       aria-label="Site menu"
     >
       <div className="flex items-center justify-between px-6 py-5">
-        <span className="text-[15px] font-medium tracking-tighter">SXTH</span>
+        <Logo variant="light" className="h-6 w-auto" />
         <button
           type="button"
           onClick={onClose}
@@ -35,15 +37,15 @@ export default function MobileMenu({ open, onClose, links }) {
 
       <nav className="flex h-[calc(100%-88px)] flex-col justify-center gap-2 px-6">
         {links.map((link, i) => (
-          <a
+          <Link
             key={link.label}
-            href={link.href}
+            to={link.to}
             onClick={onClose}
             className="border-t border-line-inv py-5 text-[13vw] font-medium leading-none tracking-tightest first:border-t-0"
             style={{ transitionDelay: `${i * 40}ms` }}
           >
             {link.label}
-          </a>
+          </Link>
         ))}
       </nav>
     </div>

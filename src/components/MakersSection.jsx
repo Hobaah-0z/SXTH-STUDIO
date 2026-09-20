@@ -39,7 +39,7 @@ export default function MakersSection() {
   return (
     <section className="bg-paper px-6 py-24 md:px-10 md:py-32">
       <div className="mx-auto max-w-[1600px]">
-        <span className="mb-2 block text-[12px] uppercase tracking-widest2 text-muted">
+        <span className="mb-2 block text-[12px] uppercase tracking-widest2 text-accent">
           The Makers
         </span>
         <div className="mt-8">

@@ -4,13 +4,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: '#0A0A08',
-        paper: '#F5F3ED',
+        ink: '#141210',
+        paper: '#F7F2E7',
         white: '#FFFFFF',
-        line: 'rgba(10,10,8,0.12)',
-        'line-inv': 'rgba(245,243,237,0.16)',
-        muted: 'rgba(10,10,8,0.56)',
-        'muted-inv': 'rgba(245,243,237,0.6)',
+        accent: '#D97706',
+        'accent-soft': '#F0C879',
+        line: 'rgba(20,18,16,0.12)',
+        'line-inv': 'rgba(247,242,231,0.16)',
+        muted: 'rgba(20,18,16,0.56)',
+        'muted-inv': 'rgba(247,242,231,0.6)',
       },
       fontFamily: {
         sans: ['"Instrument Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],

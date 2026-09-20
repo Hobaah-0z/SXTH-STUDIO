@@ -1,12 +1,14 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useScrolled } from '../hooks/useScrolled'
 import MobileMenu from './MobileMenu'
+import Logo from './Logo'
 
 const LINKS = [
-  { label: 'WORK', href: '#work' },
-  { label: 'STUDIO', href: '#studio' },
-  { label: 'SERVICES', href: '#services' },
-  { label: 'CONTACT', href: '#contact' },
+  { label: 'WORK', to: '/work' },
+  { label: 'STUDIO', to: '/studio' },
+  { label: 'SERVICES', to: '/#services' },
+  { label: 'CONTACT', to: '/contact' },
 ]
 
 export default function Navbar() {
@@ -24,14 +26,9 @@ export default function Navbar() {
           className="mx-auto flex max-w-[1600px] items-center justify-between px-6 py-5 md:px-10"
           aria-label="Primary"
         >
-          <a
-            href="#top"
-            className={`text-[15px] font-medium tracking-tighter transition-colors duration-500 ${
-              scrolled ? 'text-ink' : 'text-white'
-            }`}
-          >
-            SXTH
-          </a>
+          <Link to="/" className="block">
+            <Logo variant={scrolled ? 'dark' : 'light'} className="h-6 w-auto md:h-7" />
+          </Link>
 
           <ul
             className={`hidden items-center gap-8 text-[12px] uppercase tracking-widest2 md:flex transition-colors duration-500 ${
@@ -40,12 +37,12 @@ export default function Navbar() {
           >
             {LINKS.map((link) => (
               <li key={link.label}>
-                <a
-                  href={link.href}
-                  className="relative pb-1 after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-300 hover:after:scale-x-100"
+                <Link
+                  to={link.to}
+                  className="relative pb-1 transition-colors duration-300 hover:text-accent after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-left after:scale-x-0 after:bg-accent after:transition-transform after:duration-300 hover:after:scale-x-100"
                 >
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

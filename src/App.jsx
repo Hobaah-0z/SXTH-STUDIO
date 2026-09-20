@@ -1,15 +1,18 @@
+import { Routes, Route, useLocation } from 'react-router-dom'
+import { AnimatePresence } from 'framer-motion'
 import Navbar from './components/Navbar'
-import Hero from './components/Hero'
-import IntroSection from './components/IntroSection'
-import WorkSection from './components/WorkSection'
-import ServicesSection from './components/ServicesSection'
-import StudioSection from './components/StudioSection'
-import MakersSection from './components/MakersSection'
-import CTASection from './components/CTASection'
-import Contact from './components/Contact'
 import Footer from './components/Footer'
+import ScrollManager from './components/ScrollManager'
+import Home from './pages/Home'
+import Work from './pages/Work'
+import ProjectDetail from './pages/ProjectDetail'
+import Studio from './pages/Studio'
+import ContactPage from './pages/Contact'
+import NotFound from './pages/NotFound'
 
 export default function App() {
+  const location = useLocation()
+
   return (
     <>
       <a
@@ -20,16 +23,19 @@ export default function App() {
       </a>
 
       <Navbar />
+      <ScrollManager />
 
       <main>
-        <Hero />
-        <IntroSection />
-        <WorkSection />
-        <ServicesSection />
-        <StudioSection />
-        <MakersSection />
-        <CTASection />
-        <Contact />
+        <AnimatePresence mode="wait" initial={false}>
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<Home />} />
+            <Route path="/work" element={<Work />} />
+            <Route path="/work/:slug" element={<ProjectDetail />} />
+            <Route path="/studio" element={<Studio />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AnimatePresence>
       </main>
 
       <Footer />

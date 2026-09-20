@@ -1,8 +1,11 @@
+import { Link } from 'react-router-dom'
+import Logo from './Logo'
+
 const LINKS = [
-  { label: 'BRAND', href: '#services' },
-  { label: 'DIGITAL', href: '#services' },
-  { label: 'STRATEGY', href: '#services' },
-  { label: 'CAMPAIGN', href: '#services' },
+  { label: 'BRAND', to: '/#services' },
+  { label: 'DIGITAL', to: '/#services' },
+  { label: 'STRATEGY', to: '/#services' },
+  { label: 'CAMPAIGN', to: '/#services' },
 ]
 
 const SOCIALS = [
@@ -17,24 +20,24 @@ export default function Footer() {
     <footer className="bg-ink px-6 pb-8 pt-16 text-paper md:px-10 md:pt-24">
       <div className="mx-auto max-w-[1600px]">
         <div className="flex flex-col gap-12 border-b border-line-inv pb-12 md:flex-row md:justify-between md:pb-16">
-          <span className="text-[15vw] font-medium leading-none tracking-tightest sm:text-[10vw] md:text-[6vw]">
-            SXTH
-          </span>
+          <Link to="/" className="block">
+            <Logo variant="light" className="h-[15vw] w-auto sm:h-[10vw] md:h-[6vw]" />
+          </Link>
 
           <div className="flex flex-col gap-10 md:flex-row md:gap-16">
             <ul className="flex flex-col gap-2 text-[13px] uppercase tracking-widest2 text-muted-inv">
               {LINKS.map((l) => (
                 <li key={l.label}>
-                  <a href={l.href} className="hover:text-paper">
+                  <Link to={l.to} className="transition-colors duration-300 hover:text-accent">
                     {l.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
             <ul className="flex flex-col gap-2 text-[13px] uppercase tracking-widest2 text-muted-inv">
               {SOCIALS.map((s) => (
                 <li key={s.label}>
-                  <a href={s.href} className="hover:text-paper">
+                  <a href={s.href} className="transition-colors duration-300 hover:text-accent">
                     {s.label}
                   </a>
                 </li>

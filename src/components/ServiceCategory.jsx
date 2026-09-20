@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Magnetic from './motion/Magnetic'
 
 export default function ServiceCategory({ service, index }) {
   const [open, setOpen] = useState(false)
@@ -20,14 +21,16 @@ export default function ServiceCategory({ service, index }) {
             {service.heading}
           </h3>
         </div>
-        <span
-          className={`mt-2 shrink-0 text-[20px] transition-transform duration-500 ease-editorial ${
-            open ? 'rotate-45' : ''
-          }`}
-          aria-hidden="true"
-        >
-          +
-        </span>
+        <Magnetic strength={0.5} range={30} className="mt-2 shrink-0">
+          <span
+            className={`text-[20px] text-accent transition-transform duration-500 ease-editorial ${
+              open ? 'rotate-45' : ''
+            }`}
+            aria-hidden="true"
+          >
+            +
+          </span>
+        </Magnetic>
       </button>
 
       <div
