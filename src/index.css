@@ -23,16 +23,16 @@ html {
 }
 
 body {
-  background: #F5F3ED;
-  color: #0A0A08;
+  background: #0A0A0A;
+  color: #FFFFFF;
   font-family: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: #0A0A08;
-  color: #F5F3ED;
+  background: #FFFFFF;
+  color: #0A0A0A;
 }
 
 a, button {
@@ -69,7 +69,7 @@ a, button {
     opacity: 1;
   }
   to {
-    clip-path: inset(0% 0 0 0);
+    clip-path: inset(100% 0 0 0);
     opacity: 0;
   }
 }
@@ -97,8 +97,8 @@ a, button {
 .placeholder-texture {
   background-image: repeating-linear-gradient(
     135deg,
-    rgba(10,10,8,0.08),
-    rgba(10,10,8,0.08) 1px,
+    rgba(255,255,255,0.08),
+    rgba(255,255,255,0.08) 1px,
     transparent 1px,
     transparent 10px
   );
@@ -108,8 +108,45 @@ a, button {
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Newsletter marquee ticker */
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+/* ---- Variable-font weight, driven by native :hover (not JS) ---- */
+/* Framer Motion's generic value interpolation doesn't reliably animate
+   uncommon CSS properties like font-variation-settings across versions —
+   it can silently no-op instead of erroring. Plain :hover is guaranteed to
+   work everywhere, so the weight axis lives here instead. --wght-from/
+   --wght-to are set inline per element so this one rule serves any weight
+   pair a caller passes in. */
+.wght-hover {
+  font-variation-settings: "wght" var(--wght-from, 400);
+  transition: font-variation-settings 350ms cubic-bezier(.16, .8, .24, 1);
+}
+.wght-hover:hover {
+  font-variation-settings: "wght" var(--wght-to, 700);
+}
+
+/* SXTH continuous marquee system: duplicated tracks make both headline bands
+   loop seamlessly instead of restarting after each pass. */
+.sxth-marquee-track {
+  animation: sxth-marquee var(--marquee-duration, 28s) linear infinite;
+  will-change: transform;
+}
+
+.sxth-marquee-right {
+  animation-name: sxth-marquee-right;
+}
+
+@keyframes sxth-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes sxth-marquee-right {
+  from { transform: translate3d(-50%, 0, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sxth-marquee-track {
+    animation-play-state: paused !important;
+    transform: translate3d(0, 0, 0);
+  }
 }

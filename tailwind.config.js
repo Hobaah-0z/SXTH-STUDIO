@@ -4,18 +4,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: '#141210',
-        paper: '#F7F2E7',
+        ink: '#FFFFFF',
+        paper: '#0A0A0A',
         white: '#FFFFFF',
-        accent: '#D97706',
-        'accent-soft': '#F0C879',
-        line: 'rgba(20,18,16,0.12)',
-        'line-inv': 'rgba(247,242,231,0.16)',
-        muted: 'rgba(20,18,16,0.56)',
-        'muted-inv': 'rgba(247,242,231,0.6)',
+        accent: '#CCCCCC',
+        'accent-soft': '#8F8F8F',
+        line: 'rgba(255,255,255,0.14)',
+        'line-inv': 'rgba(10,10,10,0.18)',
+        muted: 'rgba(255,255,255,0.6)',
+        'muted-inv': 'rgba(10,10,10,0.6)',
       },
       fontFamily: {
         sans: ['"Instrument Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        // Reserved for large, single-line statement headlines — Instrument
+        // Sans only ships up to weight 700, which reads as merely bold, not
+        // the heavy condensed impact those moments call for.
+        display: ['Anton', 'Impact', 'sans-serif'],
       },
       letterSpacing: {
         tightest: '-0.04em',
