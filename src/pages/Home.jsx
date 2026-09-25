@@ -9,10 +9,10 @@ import WhyUsSection from '../components/WhyUsSection'
 import PageTransition from '../components/PageTransition'
 import { projects } from '../data/projects'
 
-export default function Home() {
+export default function Home({ onHeroReady }) {
   return (
     <PageTransition>
-      <Hero />
+      <Hero onReady={onHeroReady} />
       <StatementMarquee />
       <IntroSection />
       <ScrollWordField words={['CREATE', 'BUILD', 'MOVE', 'IMAGINE']} />

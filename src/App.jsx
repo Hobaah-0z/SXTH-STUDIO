@@ -1,4 +1,5 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
+import { useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -11,9 +12,12 @@ import ProjectDetail from './pages/ProjectDetail'
 import Studio from './pages/Studio'
 import ContactPage from './pages/Contact'
 import NotFound from './pages/NotFound'
+import SiteLoader from './components/SiteLoader'
 
 export default function App() {
   const location = useLocation()
+  const [heroReady, setHeroReady] = useState(false)
+  const isHome = location.pathname === '/'
 
   return (
     <>
@@ -32,7 +36,7 @@ export default function App() {
       <main>
         <AnimatePresence mode="wait" initial={false}>
           <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home onHeroReady={() => setHeroReady(true)} />} />
             <Route path="/work" element={<Work />} />
             <Route path="/work/:slug" element={<ProjectDetail />} />
             <Route path="/studio" element={<Studio />} />
@@ -43,6 +47,7 @@ export default function App() {
       </main>
 
       <Footer />
+      {isHome && <SiteLoader ready={heroReady} />}
     </>
   )
 }

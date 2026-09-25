@@ -27,7 +27,7 @@ export default function Navbar() {
           aria-label="Primary"
         >
           <Link to="/" className="block">
-            <Logo variant={scrolled ? 'dark' : 'light'} className="h-6 w-auto md:h-7" />
+            <Logo variant={scrolled ? 'light' : 'light'} className="h-6 w-auto md:h-7" />
           </Link>
 
           <ul

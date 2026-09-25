@@ -48,13 +48,13 @@ function ServiceRow({ service, index }) {
   return (
     <motion.div ref={ref} style={{ opacity, x }} className="group border-b border-line py-8 md:py-10">
       <div className="grid grid-cols-[auto_1fr] gap-5 md:grid-cols-[4rem_1fr_0.7fr] md:gap-10">
-        <span className="pt-2 text-[11px] uppercase tracking-widest2 text-muted">{String(index + 1).padStart(2, '0')}</span>
-        <h3 className="text-[10vw] font-medium leading-[0.82] tracking-tightest transition-transform duration-500 ease-editorial group-hover:translate-x-3 sm:text-[7vw] md:text-[4.5vw]">
+        <span className="pt-2 text-[11px] uppercase tracking-widest2 text-white/55 transition-colors duration-300 group-hover:text-white">{String(index + 1).padStart(2, '0')}</span>
+        <h3 className="text-[10vw] font-medium leading-[0.82] tracking-tightest text-white/55 transition-[color,transform] duration-500 ease-editorial group-hover:translate-x-3 group-hover:text-white sm:text-[7vw] md:text-[4.5vw]">
           {service.heading}
         </h3>
         <div className="col-start-2 mt-4 flex max-w-md flex-col gap-5 md:col-start-auto md:mt-2">
-          <p className="text-[15px] leading-relaxed text-muted md:text-[17px]">{service.description}</p>
-          <div className="flex flex-wrap gap-x-5 gap-y-2 text-[11px] uppercase tracking-widest2 text-accent">
+          <p className="text-[15px] leading-relaxed text-white/55 transition-colors duration-300 group-hover:text-white md:text-[17px]">{service.description}</p>
+          <div className="flex flex-wrap gap-x-5 gap-y-2 text-[11px] uppercase tracking-widest2 text-white/55 transition-colors duration-300 group-hover:text-white">
             {service.disciplines.map(d => <span key={d}>{d}</span>)}
           </div>
         </div>

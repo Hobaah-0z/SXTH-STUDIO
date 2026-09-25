@@ -14,10 +14,10 @@ export default function ServiceCategory({ service, index }) {
         className="flex w-full items-start justify-between gap-6 py-10 text-left md:py-14"
       >
         <div className="flex items-start gap-6 md:gap-10">
-          <span className="mt-2 text-[12px] uppercase tracking-widest2 text-muted">
+          <span className="mt-2 text-[12px] uppercase tracking-widest2 text-muted transition-colors duration-300 group-hover:text-ink">
             {number}
           </span>
-          <h3 className="text-[10vw] font-medium leading-[0.95] tracking-tightest sm:text-[6vw] md:text-[4vw]">
+          <h3 className="text-[10vw] font-medium leading-[0.95] tracking-tightest text-muted transition-colors duration-300 group-hover:text-ink sm:text-[6vw] md:text-[4vw]">
             {service.heading}
           </h3>
         </div>
@@ -39,10 +39,10 @@ export default function ServiceCategory({ service, index }) {
       >
         <div className="min-h-0">
           <div className="flex flex-col gap-8 pb-12 pl-0 md:flex-row md:justify-between md:gap-16 md:pb-16 md:pl-[4.5rem]">
-            <p className="max-w-sm text-[16px] leading-relaxed text-muted md:text-[18px]">
+            <p className="max-w-sm text-[16px] leading-relaxed text-muted transition-colors duration-300 group-hover:text-ink md:text-[18px]">
               {service.description}
             </p>
-            <ul className="flex flex-col gap-2 text-[16px] leading-relaxed md:text-[18px]">
+            <ul className="flex flex-col gap-2 text-[16px] leading-relaxed text-muted transition-colors duration-300 group-hover:text-ink md:text-[18px]">
               {service.disciplines.map((d) => (
                 <li key={d}>{d}</li>
               ))}

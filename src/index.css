@@ -150,3 +150,67 @@ a, button {
     transform: translate3d(0, 0, 0);
   }
 }
+
+/* ---- Initial video loader ---- */
+.site-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #000;
+  pointer-events: auto;
+}
+
+.site-loader--leaving {
+  animation: loaderReveal 700ms cubic-bezier(.16,.8,.24,1) forwards;
+}
+
+.site-loader__stage {
+  position: relative;
+  width: min(82vw, 460px);
+  height: min(82vw, 360px);
+  display: grid;
+  place-items: center;
+}
+
+/* The liquid no longer exists as a separate shape. It is clipped directly
+   inside the SXTH logo so the mark itself fills from white to brand yellow. */
+.site-loader__logo-wrap {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  width: min(21.5vw, 110px);
+  transform: translate(-50%, -50%);
+}
+
+.site-loader__logo-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+@keyframes loaderReveal {
+  from { opacity: 1; visibility: visible; }
+  to { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+
+@media (max-width: 640px) {
+  .site-loader__stage {
+    width: 92vw;
+    height: 84vw;
+  }
+
+  .site-loader__logo-wrap {
+    width: 24vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-loader--leaving {
+    animation-duration: 1ms;
+  }
+}

@@ -1,0 +1,106 @@
+import { useEffect, useState } from 'react'
+
+const MIN_DURATION = 2600
+const EXIT_DURATION = 700
+
+export default function SiteLoader({ ready }) {
+  const [progress, setProgress] = useState(0)
+  const [waveTime, setWaveTime] = useState(0)
+  const [exiting, setExiting] = useState(false)
+  const [visible, setVisible] = useState(true)
+
+  useEffect(() => {
+    const started = performance.now()
+    let raf = 0
+    let exitTimer = 0
+
+    const tick = (now) => {
+      const elapsed = now - started
+      const timeProgress = Math.min(elapsed / MIN_DURATION, 1)
+      const eased = 1 - Math.pow(1 - timeProgress, 3)
+
+      setProgress(eased)
+      setWaveTime(now)
+
+      if (ready && elapsed >= MIN_DURATION) {
+        setProgress(1)
+        setExiting(true)
+        exitTimer = window.setTimeout(() => setVisible(false), EXIT_DURATION)
+        return
+      }
+
+      raf = requestAnimationFrame(tick)
+    }
+
+    raf = requestAnimationFrame(tick)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.clearTimeout(exitTimer)
+    }
+  }, [ready])
+
+  // The yellow behaves like liquid inside the logo: its surface keeps moving
+  // while the level rises. The final frame completely fills the logo.
+  const level = 455.86 - progress * 455.86
+  const phase = waveTime * 0.0032
+  const fluidity = 1 - progress
+  const waveA = Math.sin(phase) * 9 * fluidity
+  const waveB = Math.sin(phase * 1.37 + 1.8) * 7 * fluidity
+  const waveC = Math.sin(phase * 0.73 - 0.9) * 5 * fluidity
+  const surface = level + waveA
+
+  const wavePath = [
+    `M 0 ${surface + waveB}`,
+    `C 90 ${surface - 12 + waveC}, 170 ${surface + 15 + waveA}, 255 ${surface - 2 + waveB}`,
+    `C 345 ${surface - 20 + waveA}, 430 ${surface + 17 + waveC}, 520 ${surface + 1}`,
+    `C 610 ${surface - 17 + waveB}, 700 ${surface + 14 + waveA}, 790 ${surface - 3 + waveC}`,
+    `C 875 ${surface - 18 + waveA}, 950 ${surface + 14 + waveB}, 1021.9 ${surface}`,
+    'L 1021.9 455.86',
+    'L 0 455.86',
+    'Z',
+  ].join(' ')
+
+  if (!visible) return null
+
+  return (
+    <div
+      className={`site-loader ${exiting ? 'site-loader--leaving' : ''}`}
+      aria-label="Loading SXTH Studio"
+      role="status"
+    >
+      <div className="site-loader__stage">
+        <div className="site-loader__logo-wrap" aria-hidden="true">
+          <svg
+            viewBox="0 0 1021.9 455.86"
+            className="site-loader__logo-svg"
+            role="img"
+            aria-label="SXTH"
+          >
+            <defs>
+              <mask
+                id="sxth-logo-mask"
+                maskUnits="userSpaceOnUse"
+                x="0"
+                y="0"
+                width="1021.9"
+                height="455.86"
+              >
+                <rect width="1021.9" height="455.86" fill="black" />
+                <g fill="white">
+                  <path d="M695.56,281.18v-68H766.1V162H512l-49.8,69.18L412.68,162H324.51L416,279.71l-93,118h86.4l51.74-70.59,50.37,70.59h88.18L507,278.11l51.26-64.89h61.57V318.43q0,43.26,21.51,61.09t65.61,17.85a265.33,265.33,0,0,0,33.38-1.78,214.22,214.22,0,0,0,25.82-4.92V336l-6.28,3q-3.77,2.1-13.29,4.62a63.74,63.74,0,0,1-15.38,2.51q-14.24,0-21.67-4.31a23.25,23.25,0,0,1-10.36-11.66,44.68,44.68,0,0,1-3.35-16.61q-.21-9.26-.21-21.66V281.18Z" />
+                  <path d="M1021.9,298v99.72H946.11V334.56a278.4,278.4,0,0,0-1.46-28.45q-1.49-14.17-5-20.89a25.2,25.2,0,0,0-12.28-11.33q-8.08-3.57-22.57-3.57a68.89,68.89,0,0,0-20.89,3.36,110,110,0,0,0-22,10.12v114H786.1V162h75.78v26l0,0v42.62h0V241q19.59-15.18,37.68-23.37,18.56-8.38,41.2-8.39,38.16,0,59.65,22.25T1021.9,298Z" />
+                  <path d="M163.12,0l58.73,36-77.4,114.34c1.41-.17,2.24-.26,3.07-.38,12.49-1.78,25-3.31,37.63-3.89a221,221,0,0,1,48.2,2.78c24.94,4.34,48,13.18,68.3,28.58,14.09,10.68,25.16,24,34,39.21a134.51,134.51,0,0,1,11.16,23.85A106.21,106.21,0,0,1,351.3,291c-2.92,19.57-10.67,37.24-21.39,53.69a194.78,194.78,0,0,1-38,42.3c-28.9,24.45-61.47,42.42-97.24,54.64-22,7.53-44.59,12.49-67.88,13.84-14.82.86-29.55.3-44.11-2.7-20.42-4.2-39-12.34-54.15-27-16.92-16.4-26.37-36.54-28.3-60-1.67-20.35,4.85-38.24,17.51-54,9.2-11.47,20.46-20.57,32.8-28.45,15.67-10,32.58-17.31,50.07-23.37,16.27-5.64,64,28.09,69.16,48.81-.92.21-40.53,9.6-58.64,17.48-9.78,4.25-19.27,9-27.59,15.79A48.55,48.55,0,0,0,72.72,354c-7.57,12.25-2.39,27.36,9.17,33.66,5.29,2.88,11.06,4.09,17,4.75,12.25,1.39,24.42.38,36.47-1.85,34.84-6.44,66.4-20.61,95.19-41.08a171.08,171.08,0,0,0,28.4-24.95c7-7.82,13.27-16.19,17.89-25.67,7.59-15.53,9.45-31.46,2.58-47.72a64.27,64.27,0,0,0-26-30.47c-7.73-4.75-16.17-7.56-25-9.45-18-3.84-36.06-2.89-54.11-.61a344.63,344.63,0,0,0-52.68,11.23c-9.67,2.8-19.24,5.94-28.85,8.93-6.17,1.93-12.33,3.95-18.79,4.74a40.22,40.22,0,0,1-21.59-2.82c-10.05-4.46-21.22-16-20.69-31.1a29.68,29.68,0,0,1,5.43-15.87q15.33-22.59,30.63-45.22Q104.94,85.6,142.16,30.66q9.68-14.28,19.43-28.5C162,1.51,162.5.87,163.12,0Z" />
+                </g>
+              </mask>
+            </defs>
+
+            <g mask="url(#sxth-logo-mask)">
+              <rect width="1021.9" height="455.86" fill="#fff" />
+              <path d={wavePath} fill="#FFCC03" />
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  )
+}

@@ -2,7 +2,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 import { useRef } from 'react'
 import HeroText from './HeroText'
 
-export default function Hero() {
+export default function Hero({ onReady }) {
   const ref = useRef(null)
   const reduced = useReducedMotion()
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
@@ -14,7 +14,16 @@ export default function Hero() {
   return (
     <section ref={ref} id="top" className="relative h-[100svh] w-full overflow-hidden bg-black">
       <motion.div style={{ scale: mediaScale, y: mediaY }} className="absolute inset-0 will-change-transform">
-        <video className="h-full w-full object-cover" autoPlay muted loop playsInline poster="/images/sxth-creation-poster.jpg" preload="metadata">
+        <video
+          className="h-full w-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/images/sxth-creation-poster.jpg"
+          preload="auto"
+          onCanPlayThrough={onReady}
+        >
           <source src="/videos/sxth-creation.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/35" />

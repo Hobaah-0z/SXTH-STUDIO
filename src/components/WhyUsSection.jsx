@@ -75,7 +75,6 @@ export default function WhyUsSection() {
   return (
     <section className="border-t border-line bg-paper px-6 py-24 md:px-10 md:py-32">
       <div className="mx-auto max-w-[1600px]">
-        <span className="mb-10 block text-center text-[12px] uppercase tracking-widest2 text-accent-soft md:mb-16">Why Us</span>
         <h2 className="mb-16 text-center text-[13vw] font-medium leading-[0.9] tracking-tightest sm:text-[9vw] md:mb-20 md:text-[6vw]">Why Us?</h2>
         <div className="flex flex-wrap justify-center gap-4 md:gap-6">
           {whyUsPoints.map((point, i) => <WhyUsCard key={point} point={point} index={i} reducedMotion={reducedMotion} />)}
