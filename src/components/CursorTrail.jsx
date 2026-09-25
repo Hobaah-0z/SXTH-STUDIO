@@ -1,47 +1,30 @@
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from '../hooks/useReducedMotion'
-import { TRAIL_COLORS, hexToRgb, sampleRamp } from '../lib/trailPalette'
 
-// A smooth, colour-graded ribbon that follows the cursor.
-//
-// The site's palette is deliberately monochrome, so this is the one place
-// colour appears — which means it has to behave: it's a single continuous
-// stroke (not a particle spray), it tapers to nothing at the tail, and it
-// fades out entirely when the pointer stops. Drawn on a canvas with
-// `screen` blending so it reads as light on the near-black paper.
-//
-// Two things keep it feeling "smooth" rather than jittery:
-//   1. The head chases the raw pointer position with a spring (critically
-//      damped-ish), so fast flicks arc instead of snapping.
-//   2. Segments are drawn as quadratic curves through the midpoints of the
-//      sampled points, which rounds off the polyline entirely.
-//
-// The same ramp (src/lib/trailPalette.js) tints the liquid-distortion
-// imagery in FeaturedProjectMedia, so the two effects read as one system.
+// Monochrome "fire" cursor trail.
+// The reference effect is a soft chain of round, tapered particles that
+// follows behind the real cursor. `difference` makes the particles invert
+// whatever surface they pass over: black on white, white on black, etc.
 
 export default function CursorTrail({
-  colors = TRAIL_COLORS,
-  width = 14,        // stroke width at the head, in px
-  length = 26,       // how many points the ribbon holds — longer = more lag
-  speed = 0.22,      // how hard the head chases the pointer (0 → 1)
-  cycle = 0.00006,   // how fast the palette drifts over time
-  glow = true,
+  width = 14,
+  length = 5,
+  speed = 0.26,
+  glow = false,
 }) {
   const canvasRef = useRef(null)
   const reducedMotion = useReducedMotion()
 
   useEffect(() => {
-    // No trail for reduced-motion users, and none on touch — there's no
-    // persistent pointer to trail behind.
     if (reducedMotion) return
     if (!window.matchMedia('(pointer: fine)').matches) return
 
     const canvas = canvasRef.current
     if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    const rgbStops = colors.map(hexToRgb)
 
+    const ctx = canvas.getContext('2d')
     let dpr = 1
+
     function resize() {
       dpr = Math.min(window.devicePixelRatio || 1, 2)
       canvas.width = Math.floor(window.innerWidth * dpr)
@@ -50,89 +33,139 @@ export default function CursorTrail({
       canvas.style.height = `${window.innerHeight}px`
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     }
+
     resize()
     window.addEventListener('resize', resize)
 
-    // Raw pointer target, the spring-smoothed head, and the trail history.
     const target = { x: -9999, y: -9999 }
-    const head = { x: -9999, y: -9999 }
+    const particles = Array.from({ length }, () => ({
+      x: -9999,
+      y: -9999,
+      vx: 0,
+      vy: 0,
+    }))
+
     let seeded = false
-    let points = []
-    let alive = 0 // 0 → 1 master opacity, eases out when the pointer rests
-    let idleFrames = 0
+    let idle = 1
     let raf = 0
+    let lastTime = performance.now()
 
     function onMove(e) {
       target.x = e.clientX
       target.y = e.clientY
+      idle = 0
+
       if (!seeded) {
-        head.x = target.x
-        head.y = target.y
+        for (const particle of particles) {
+          particle.x = target.x
+          particle.y = target.y
+        }
         seeded = true
       }
-      idleFrames = 0
     }
+
     function onLeave() {
-      idleFrames = 999
+      idle = 1
     }
 
     window.addEventListener('pointermove', onMove, { passive: true })
     window.addEventListener('pointerdown', onMove, { passive: true })
     document.addEventListener('pointerleave', onLeave)
 
+    function drawParticle(x, y, radius, angle, stretch, alpha) {
+      ctx.save()
+      ctx.translate(x, y)
+      ctx.rotate(angle)
+
+      ctx.beginPath()
+      ctx.ellipse(
+        0,
+        0,
+        radius * (1 + stretch),
+        radius * (1 - stretch * 0.45),
+        0,
+        0,
+        Math.PI * 2,
+      )
+      ctx.fillStyle = `rgba(255,255,255,${alpha})`
+      ctx.fill()
+      ctx.restore()
+    }
+
     function frame(now) {
       raf = requestAnimationFrame(frame)
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
 
+      const dt = Math.min(40, now - lastTime)
+      lastTime = now
+      const frameScale = dt / 16.6667
+
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
       if (!seeded) return
 
-      head.x += (target.x - head.x) * speed
-      head.y += (target.y - head.y) * speed
+      const lead = particles[0]
+      const leadDx = target.x - lead.x
+      const leadDy = target.y - lead.y
+      lead.vx += leadDx * speed * 0.42 * frameScale
+      lead.vy += leadDy * speed * 0.42 * frameScale
+      lead.vx *= Math.pow(0.62, frameScale)
+      lead.vy *= Math.pow(0.62, frameScale)
+      lead.x += lead.vx * frameScale
+      lead.y += lead.vy * frameScale
 
-      points.push({ x: head.x, y: head.y })
-      while (points.length > length) points.shift()
-
-      // The ribbon breathes in when the pointer moves and out when it rests,
-      // so a parked cursor doesn't leave a permanent smear on the page.
-      const moving = Math.hypot(target.x - head.x, target.y - head.y) > 0.4
-      idleFrames = moving ? 0 : idleFrames + 1
-      const wantAlive = idleFrames > 8 ? 0 : 1
-      alive += (wantAlive - alive) * 0.08
-      if (alive < 0.01) return
-
-      ctx.globalCompositeOperation = 'screen'
-      ctx.lineCap = 'round'
-      ctx.lineJoin = 'round'
-
-      // Wide soft pass first, then a tighter bright pass on top — cheaper
-      // and steadier than a canvas blur filter.
-      const passes = glow ? [{ w: 2.6, a: 0.16 }, { w: 1, a: 0.85 }] : [{ w: 1, a: 0.9 }]
-
-      for (const pass of passes) {
-        for (let i = 1; i < points.length - 1; i++) {
-          const p = points[i]
-          const prev = points[i - 1]
-          const next = points[i + 1]
-
-          // t: 0 at the tail, 1 at the head.
-          const t = i / (points.length - 1)
-          const [r, g, b] = sampleRamp(rgbStops, t * 0.85 + now * cycle)
-
-          ctx.beginPath()
-          ctx.moveTo((prev.x + p.x) / 2, (prev.y + p.y) / 2)
-          ctx.quadraticCurveTo(p.x, p.y, (p.x + next.x) / 2, (p.y + next.y) / 2)
-          ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${t * t * pass.a * alive})`
-          ctx.lineWidth = Math.max(0.5, width * t * pass.w)
-          ctx.stroke()
-        }
+      for (let i = 1; i < particles.length; i += 1) {
+        const particle = particles[i]
+        const previous = particles[i - 1]
+        const follow = 0.24 + (i / particles.length) * 0.07
+        particle.vx += (previous.x - particle.x) * follow * frameScale
+        particle.vy += (previous.y - particle.y) * follow * frameScale
+        particle.vx *= Math.pow(0.52, frameScale)
+        particle.vy *= Math.pow(0.52, frameScale)
+        particle.x += particle.vx * frameScale
+        particle.y += particle.vy * frameScale
       }
 
-      // A small bright dot riding the very front of the ribbon.
-      const [hr, hg, hb] = sampleRamp(rgbStops, 0.85 + now * cycle)
-      ctx.beginPath()
-      ctx.arc(head.x, head.y, width * 0.3, 0, Math.PI * 2)
-      ctx.fillStyle = `rgba(${hr}, ${hg}, ${hb}, ${0.9 * alive})`
-      ctx.fill()
+      const leadSpeed = Math.hypot(lead.vx, lead.vy)
+      idle += leadSpeed < 0.08 ? dt : -dt * 2.5
+      idle = Math.max(0, Math.min(1000, idle))
+      const fade = Math.max(0, 1 - Math.max(0, idle - 220) / 300)
+      if (fade <= 0) return
+
+      // White + difference = automatic inversion.
+      ctx.globalCompositeOperation = 'difference'
+
+      if (glow && leadSpeed > 1.5) {
+        const tail = particles[particles.length - 1]
+        drawParticle(
+          tail.x,
+          tail.y,
+          Math.max(0.5, width * 0.07),
+          Math.atan2(tail.vy, tail.vx),
+          0,
+          0.45 * fade,
+        )
+      }
+
+      // Largest particle at the leading end, tapering to pin-sized particles.
+      for (let i = particles.length - 1; i >= 0; i -= 1) {
+        const particle = particles[i]
+        const t = 1 - i / Math.max(1, particles.length - 1)
+        const eased = t * t * (3 - 2 * t)
+        const radius = Math.max(0.65, width * (0.075 + 0.925 * eased))
+        const velocity = Math.hypot(particle.vx, particle.vy)
+        const angle = Math.atan2(particle.vy, particle.vx)
+        const stretch = Math.min(0.34, velocity / 34) * (0.35 + eased * 0.65)
+
+        drawParticle(
+          particle.x,
+          particle.y,
+          radius,
+          angle,
+          stretch,
+          fade * (0.45 + eased * 0.55),
+        )
+      }
+
+      ctx.globalCompositeOperation = 'source-over'
     }
 
     raf = requestAnimationFrame(frame)
@@ -144,9 +177,7 @@ export default function CursorTrail({
       window.removeEventListener('pointerdown', onMove)
       document.removeEventListener('pointerleave', onLeave)
     }
-    // `colors` is joined so an inline array literal doesn't restart the loop
-    // on every parent render.
-  }, [colors.join(','), width, length, speed, cycle, glow, reducedMotion]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [width, length, speed, glow, reducedMotion])
 
   return (
     <canvas

@@ -38,12 +38,8 @@ export default function FeaturedProjectMedia({
     if (!el || !canPlayVideo) return
 
     if (shouldPlay) {
-      // Start from the beginning every time the pointer enters the card.
-      el.currentTime = 0
       const playPromise = el.play()
-      if (playPromise && typeof playPromise.catch === 'function') {
-        playPromise.catch(() => {})
-      }
+      if (playPromise && typeof playPromise.catch === 'function') playPromise.catch(() => {})
     } else {
       el.pause()
       el.currentTime = 0
@@ -67,7 +63,7 @@ export default function FeaturedProjectMedia({
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
           poster={image}
           onError={() => setVideoFailed(true)}
           className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-700 ease-editorial ${

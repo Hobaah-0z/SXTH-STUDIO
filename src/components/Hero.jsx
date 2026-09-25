@@ -24,13 +24,11 @@ export default function Hero() {
       <motion.div style={{ y: contentY, opacity: contentOpacity }} className="relative flex h-full w-full flex-col justify-end px-6 pb-10 md:px-10 md:pb-14">
         <div className="flex items-end justify-between gap-6">
           <div className="hidden max-w-xs md:block"><span className="text-[11px] uppercase tracking-widest2 text-white/65">Independent creative studio</span><p className="mt-3 text-[14px] leading-relaxed text-white/70">Brands, digital experiences, products and visual worlds for people building what comes next.</p></div>
-          <span className="text-[12px] uppercase tracking-widest2 text-white/80 md:hidden">06 / Creation</span>
           <HeroText reducedMotion={reduced} />
         </div>
       </motion.div>
 
       <div className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-white/60 md:flex"><span className="text-[10px] uppercase tracking-widest2">Scroll</span><span className="h-8 w-px bg-white/50" aria-hidden="true" /></div>
-      <div className="absolute bottom-6 right-6 text-[10px] uppercase tracking-widest2 text-white/55 md:right-10">06 / 2026</div>
     </section>
   )
 }

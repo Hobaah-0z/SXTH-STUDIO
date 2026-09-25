@@ -24,7 +24,6 @@ export default function SplitIntro() {
           visible ? 'is-visible' : ''
         }`}
       >
-        <span className="text-[12px] uppercase tracking-widest2 text-accent">06 / Creation</span>
         <RevealLines
           lines={['THE SIXTH IS WHERE', 'CREATION BEGINS.']}
           className="max-w-lg text-[10vw] font-medium leading-[0.98] tracking-tightest sm:text-[6vw] md:text-[3.4vw]"

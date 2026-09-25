@@ -14,9 +14,6 @@ export default function ServicesTeaserBand() {
         />
 
         <div className="mt-10 flex flex-col items-start gap-4 bg-paper p-6 md:mt-14 md:max-w-md md:p-8">
-          <span className="text-[12px] uppercase tracking-widest2 text-muted">
-            Four disciplines
-          </span>
           <p className="text-[15px] leading-relaxed text-ink/80">
             Strategy, brand, digital and campaign — worked together, not
             handed off between departments.

@@ -14,7 +14,6 @@ export default function OwnittStyleServices() {
       <div className="mx-auto max-w-[1600px]">
         <div className="mb-10 flex items-end justify-between border-b border-line pb-5 md:mb-14">
           <span className="text-[12px] uppercase tracking-widest2 text-accent">What shall we make?</span>
-          <span className="text-[12px] uppercase tracking-widest2 text-muted">04 disciplines</span>
         </div>
 
         <motion.div style={{ x }} className="mb-14 md:mb-20">

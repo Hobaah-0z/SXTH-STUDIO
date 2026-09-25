@@ -71,7 +71,7 @@ export default function FeaturedProjectCard({
           <FeaturedProjectMedia
             image={project.image}
             video={project.video}
-            hovering={hovering}
+            hovering={showPill}
             alt={`${project.name} — ${project.category}`}
             label={project.name}
             className="h-full w-full"

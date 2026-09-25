@@ -8,7 +8,7 @@ export default function ProjectSequence({ projects }) {
   return (
     <section id="work" className="bg-paper px-6 py-28 md:px-10 md:py-40">
       <div className="mx-auto max-w-[1600px]">
-        <div className="mb-16 flex items-end justify-between border-b border-line pb-6 md:mb-24"><div><span className="block text-[12px] uppercase tracking-widest2 text-accent">Selected works</span><h2 className="mt-5 text-[8vw] font-medium leading-[0.82] tracking-tightest md:text-[5vw]">SELECTED WORKS</h2></div><Link to="/work" className="hidden text-[12px] uppercase tracking-widest2 text-muted transition-colors hover:text-white md:block">All work →</Link></div>
+        <div className="mb-16 flex items-end justify-between border-b border-line pb-6 md:mb-24"><div><h2 className="text-[8vw] font-medium leading-[0.82] tracking-tightest md:text-[5vw]">SELECTED WORKS</h2></div><Link to="/work" className="hidden text-[12px] uppercase tracking-widest2 text-muted transition-colors hover:text-white md:block">All work →</Link></div>
         <div className="space-y-28 md:space-y-48">{projects.map((project, i) => <ProjectStage key={project.id} project={project} index={i} total={projects.length} />)}</div>
         <div className="mt-20 border-t border-line pt-8 md:mt-28"><Link to="/work" className="text-[12px] uppercase tracking-widest2 text-muted hover:text-white md:hidden">View all work →</Link></div>
       </div>
