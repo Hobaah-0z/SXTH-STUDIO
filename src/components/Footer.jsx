@@ -91,7 +91,7 @@ export default function Footer() {
         </div>
 
         <div className="relative h-[25vw] min-h-[155px] max-h-[390px] overflow-hidden border-t border-[#433207]/15 pt-3 sm:h-[23vw] md:h-[21vw]">
-          <Link to="/" aria-label="SXTH home" className="absolute inset-x-0 bottom-[-8vw] block sm:bottom-[-7vw] md:bottom-[-6vw]">
+          <Link to="/" aria-label="SXTH home" className="absolute inset-x-0 bottom-[-14vw] block sm:bottom-[-13vw] md:bottom-[-12vw]">
             <Logo
               variant="dark"
               className="h-auto w-full scale-[0.95] origin-bottom-center"
